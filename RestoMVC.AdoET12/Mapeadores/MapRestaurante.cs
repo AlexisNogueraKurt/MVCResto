@@ -12,14 +12,16 @@ namespace RestoMVC.Core.AdoET12.Mapeadores
     public class MapRestaurante : Mapeador<Restaurante>
     {
         public MapRestaurante(AdoAGBD ado) : base(ado)
-        {
-            Tabla = "Restaurante";
-        }
+            => Tabla = "Restaurante";
         public override Restaurante ObjetoDesdeFila(DataRow fila)
         => new Restaurante()
         {
             Id = Convert.ToInt32(fila["id"]),
-            Nombre = fila["nombre"].ToString()
+            Nombre = fila["nombre"].ToString(),
+            Direccion = fila["direccion"].ToString(),
+            Mail = fila["mail"].ToString(),
+            Telefono = Convert.ToInt32(fila["telefono"]),
+            Contrasenia = fila["contrasenia"].ToString()
         };
         public void AltaRestaurante(Restaurante restaurante)
             => EjecutarComandoCon("altaRestaurante", ConfigurarAltaRestaurante, restaurante);
@@ -28,14 +30,34 @@ namespace RestoMVC.Core.AdoET12.Mapeadores
         {
             SetComandoSP("altaRestaurante");
 
-            BP.CrearParametro("Id")
+            BP.CrearParametro("id")
                     .SetTipo(MySql.Data.MySqlClient.MySqlDbType.Int32)
                     .SetValor(restaurante.Id)
                     .AgregarParametro();
 
-            BP.CrearParametro("Nombre")
+            BP.CrearParametro("nombre")
                     .SetTipoVarchar(45)
                     .SetValor(restaurante.Nombre)
+                    .AgregarParametro();
+            
+            BP.CrearParametro("direccion")
+                    .SetTipoVarchar(45)
+                    .SetValor(restaurante.Direccion)
+                    .AgregarParametro();
+
+            BP.CrearParametro("mail")
+                    .SetTipoVarchar(45)
+                    .SetValor(restaurante.Mail)
+                    .AgregarParametro();
+
+            BP.CrearParametro("telefono")
+                    .SetTipo(MySql.Data.MySqlClient.MySqlDbType.Int32)
+                    .SetValor(restaurante.Telefono)
+                    .AgregarParametro();
+
+            BP.CrearParametro("contrasenia")
+                    .SetTipoVarchar(64)
+                    .SetValor(restaurante.Contrasenia)
                     .AgregarParametro();
         }
 
@@ -50,6 +72,24 @@ namespace RestoMVC.Core.AdoET12.Mapeadores
 
             return ElementoDesdeSP();
         }
+        public Restaurante restoPorPass(string Mail ,string Contrasenia)
+        {
+            SetComandoSP("restoPorPass");
+
+            BP.CrearParametro("unMail")
+                .SetTipoVarchar(45)
+                .SetValor(Mail)
+                .AgregarParametro();
+            
+            BP.CrearParametro("unaContrasenia")
+                .SetTipoVarchar(64)
+                .SetValor(Contrasenia)
+                .AgregarParametro();
+
+            return ElementoDesdeSP();
+
+        }
+
         public List<Restaurante> ObtenerRestaurante() => ColeccionDesdeTabla();
     }
 

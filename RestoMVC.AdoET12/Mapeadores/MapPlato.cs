@@ -23,26 +23,26 @@ namespace RestoMVC.Core.AdoET12.Mapeadores
 
         };
         public void AltaPlato(Plato plato)
-            => EjecutarComandoCon("altaRestaurante", ConfigurarAltaPlato, plato);
+            => EjecutarComandoCon("altaPlato", ConfigurarAltaPlato, plato);
 
         public void ConfigurarAltaPlato(Plato plato)
         {
-            SetComandoSP("altaRestaurante");
+            SetComandoSP("altaPlato");
 
             BP.CrearParametro("Id")
                     .SetTipo(MySql.Data.MySqlClient.MySqlDbType.Int32)
-                    .SetValor(restaurante.Id)
+                    .SetValor(plato.Id)
                     .AgregarParametro();
 
             BP.CrearParametro("Nombre")
                     .SetTipoVarchar(45)
-                    .SetValor(restaurante.Nombre)
+                    .SetValor(plato.Nombre)
                     .AgregarParametro();
         }
 
-        public Restaurante RestaurantePorId(int Id)
+        public Plato RestaurantePorId(int Id)
         {
-            SetComandoSP("RestaurantePorId");
+            SetComandoSP("PlatoPorId");
 
             BP.CrearParametro("unId")
                 .SetTipo(MySql.Data.MySqlClient.MySqlDbType.Int32)
@@ -51,7 +51,7 @@ namespace RestoMVC.Core.AdoET12.Mapeadores
 
             return ElementoDesdeSP();
         }
-        public List<Restaurante> ObtenerRestaurante() => ColeccionDesdeTabla();
+        public List<Plato> ObtenerPlato() => ColeccionDesdeTabla();
     }
 
 }
